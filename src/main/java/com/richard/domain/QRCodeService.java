@@ -27,17 +27,25 @@ import java.util.Base64;
 public class QRCodeService {
     private Logger logger = LoggerFactory.getLogger(QRCodeService.class);
 
-
-    public String generateQRCode(String text, int width, int height) throws WriterException, IOException {
+    public String generateQRCode(String request, int width, int height) throws WriterException, IOException {
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
+        BitMatrix bitMatrix = qrCodeWriter.encode(request, BarcodeFormat.QR_CODE, width, height);
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFF04B4AE);
         MatrixToImageWriter.writeToStream(bitMatrix,"PNG", pngOutputStream, con);
         byte[] pngData = pngOutputStream.toByteArray();
 
         return Base64.getEncoder().encodeToString(pngData);
+    }
+
+    public ByteArrayOutputStream generateQRCodeByteArrayOutputStream(String request, int width, int height) throws WriterException, IOException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(request, BarcodeFormat.QR_CODE, width, height);
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFF04B4AE);
+        MatrixToImageWriter.writeToStream(bitMatrix,"PNG", pngOutputStream, con);
+        return pngOutputStream;
     }
 
     public String readQRCode(String request) {
