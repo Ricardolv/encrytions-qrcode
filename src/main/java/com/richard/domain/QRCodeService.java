@@ -2,6 +2,7 @@ package com.richard.domain;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
@@ -12,6 +13,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.EnumMap;
 
 @Service
 public class QRCodeService {
@@ -63,6 +66,21 @@ public class QRCodeService {
             logger.error("Error during reading QR code image", ex);
         }
         return null;
+    }
+
+    public String generateQRCodeCustom(String request) throws WriterException, IOException {
+
+        EnumMap<EncodeHintType, ErrorCorrectionLevel> hints = new EnumMap<>(EncodeHintType.class);
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(request, BarcodeFormat.QR_CODE, 256, 256, hints);
+
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix,"PNG", pngOutputStream);
+        byte[] pngData = pngOutputStream.toByteArray();
+
+        return Base64.getMimeEncoder().encodeToString(pngData);
     }
 
 }
