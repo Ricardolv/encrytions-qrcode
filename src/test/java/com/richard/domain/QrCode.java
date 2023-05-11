@@ -20,7 +20,7 @@ public class QrCode {
 
 
         String content = "https://rd.com.br";
-        String pathToStore = "/home/richard/git/encrytions-qrcode/generate.png";
+        String pathToStore = "/home/richard/git/encrytions-qrcode/src/main/resources/images/generate.png";
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 400, 400);
         MatrixToImageConfig imageConfig = new MatrixToImageConfig(MatrixToImageConfig.BLACK, MatrixToImageConfig.WHITE);
@@ -28,7 +28,7 @@ public class QrCode {
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix, imageConfig);
 
         // Getting logo image
-        BufferedImage logoImage = ImageIO.read( new File("/home/richard/git/encrytions-qrcode/src/main/resources/image/logo-100x100.png"));
+        BufferedImage logoImage = ImageIO.read( new File("/home/richard/git/encrytions-qrcode/src/main/resources/images/logo.png"));
         int finalImageHeight = qrImage.getHeight() - logoImage.getHeight();
         int finalImageWidth = qrImage.getWidth() - logoImage.getWidth();
 
